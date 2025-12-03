@@ -22,9 +22,8 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
-
-
-
+----------------------------------------------------------------------
+The exercises in assignments folder are from launchschool.com
 ----------------------------------------------------------------------
 Don't mind the other file for those are just test if it works.
 
