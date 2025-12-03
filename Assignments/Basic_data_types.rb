@@ -1,5 +1,4 @@
 # Basic data types assignment
-require_relative "./config/environment"
 
 puts "Rails assignment file ready!"
 

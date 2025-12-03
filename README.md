@@ -38,3 +38,5 @@ now type "ruby assignmentfile_name.rb" and hit enter.
 Again make sure that the other line of codes are commented so that the exercise will run smoothly and precisely.
 
 ----------------------------------------------------------------------
+In project folder, i did my best to my knowledge and also by the help of ai tool (namely: Chatgpt) to complete the project.
+

@@ -1,5 +1,4 @@
 # Variables assignment
-require_relative "./config/environment"
 
 puts "Rails assignment file ready!"
 
