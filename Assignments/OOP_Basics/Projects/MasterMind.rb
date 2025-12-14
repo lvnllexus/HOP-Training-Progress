@@ -77,15 +77,12 @@ class MasterMind
 end
 
 # To start the game, uncomment the line below:
-# MasterMind.new.play #This one?, yes this one 
+MasterMind.new.play #This one?, yes this one 
     if winner
     "Player #{winner} wins!"
   else
     "It's a draw!"
   end
-end
-end
-
 #To run the game, Open a terminal and navigate to the directory containing this file. Then run:
 #ruby MasterMind.rb
 # Enjoy playing MasterMind!
