@@ -1,0 +1,105 @@
+--- !ruby/object:Chess::Game
+board: !ruby/object:Chess::Board
+  grid:
+  - - !ruby/object:Chess::Rook
+      color: :black
+    - !ruby/object:Chess::Knight
+      color: :black
+    - !ruby/object:Chess::Bishop
+      color: :black
+    - !ruby/object:Chess::Queen
+      color: :black
+    - !ruby/object:Chess::King
+      color: :black
+    - !ruby/object:Chess::Bishop
+      color: :black
+    - !ruby/object:Chess::Knight
+      color: :black
+    - !ruby/object:Chess::Rook
+      color: :black
+  - - !ruby/object:Chess::Pawn
+      color: :black
+    - !ruby/object:Chess::Pawn
+      color: :black
+    - !ruby/object:Chess::Pawn
+      color: :black
+    - !ruby/object:Chess::Pawn
+      color: :black
+    - !ruby/object:Chess::Pawn
+      color: :black
+    - !ruby/object:Chess::Pawn
+      color: :black
+    - !ruby/object:Chess::Pawn
+      color: :black
+    - !ruby/object:Chess::Pawn
+      color: :black
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - - !ruby/object:Chess::Pawn
+      color: :white
+    - !ruby/object:Chess::Pawn
+      color: :white
+    - !ruby/object:Chess::Pawn
+      color: :white
+    - !ruby/object:Chess::Pawn
+      color: :white
+    - !ruby/object:Chess::Pawn
+      color: :white
+    - !ruby/object:Chess::Pawn
+      color: :white
+    - !ruby/object:Chess::Pawn
+      color: :white
+    - !ruby/object:Chess::Pawn
+      color: :white
+  - - !ruby/object:Chess::Rook
+      color: :white
+    - !ruby/object:Chess::Knight
+      color: :white
+    - !ruby/object:Chess::Bishop
+      color: :white
+    - !ruby/object:Chess::Queen
+      color: :white
+    - !ruby/object:Chess::King
+      color: :white
+    - !ruby/object:Chess::Bishop
+      color: :white
+    - !ruby/object:Chess::Knight
+      color: :white
+    - !ruby/object:Chess::Rook
+      color: :white
+players:
+- &1 !ruby/object:Chess::Player
+  color: :white
+- !ruby/object:Chess::Player
+  color: :black
+current_player: *1
