@@ -7,11 +7,8 @@ type Props = {
 };
 
 export default function ImageViewer({ imgSource, selectedImage }: Props) {
-  const imageSource = selectedImage
-    ? { uri: selectedImage }
-    : imgSource;
-
-  return <Image source={imageSource} style={styles.image} />;
+  const source = selectedImage ? { uri: selectedImage } : imgSource;
+  return <Image source={source} style={styles.image} />;
 }
 
 const styles = StyleSheet.create({
