@@ -5,17 +5,20 @@ import {
   FlatList,
   TouchableOpacity,
   TextInput,
-  Button,
   StyleSheet,
   Alert,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
+  ScrollView,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import { useTheme } from '@/app/context/ThemeContext';
 
 export default function TodoListScreen() {
+  const { theme } = useTheme(); // Get current theme for styling
+
   const [todos, setTodos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -23,11 +26,8 @@ export default function TodoListScreen() {
   const [editTitle, setEditTitle] = useState('');
   const [editTodoId, setEditTodoId] = useState(null);
 
-  // Change this to your PC IP when testing on physical phone
-  const API_URL = 'http://192.168.1.16:3000/todos';
-  // For Android emulator, use 'http://244.178.44.111:3000/todos' based on your emulator IP
+  const API_URL = 'http://192.168.1.16:3000/todos'; //Use your local IP in order to connect to the backend from the mobile app
 
-  // Fetch todos from backend
   const fetchTodos = async () => {
     try {
       const response = await fetch(API_URL);
@@ -42,7 +42,6 @@ export default function TodoListScreen() {
     fetchTodos();
   }, []);
 
-  // Add new todo
   const addTodo = async () => {
     if (!newTitle.trim()) return;
     try {
@@ -59,7 +58,6 @@ export default function TodoListScreen() {
     }
   };
 
-  // Toggle completed
   const toggleCompleted = async (todo) => {
     try {
       await fetch(`${API_URL}/${todo.id}`, {
@@ -73,7 +71,6 @@ export default function TodoListScreen() {
     }
   };
 
-  // Delete todo
   const deleteTodo = async (id) => {
     Alert.alert('Delete Todo', 'Are you sure?', [
       { text: 'Cancel' },
@@ -91,14 +88,12 @@ export default function TodoListScreen() {
     ]);
   };
 
-  // Open edit modal
   const openEditModal = (todo) => {
     setEditTitle(todo.title);
     setEditTodoId(todo.id);
     setEditModalVisible(true);
   };
 
-  // Edit todo
   const editTodo = async () => {
     if (!editTitle.trim()) return;
     try {
@@ -116,29 +111,59 @@ export default function TodoListScreen() {
     }
   };
 
+  // Theme-based styles
+  const isDark = theme === 'dark';
+  const backgroundColor = isDark ? '#121212' : '#f9f9f9';
+  const textColor = isDark ? '#ffffff' : '#000000';
+  const inputBackground = isDark ? '#1e1e1e' : '#ffffff';
+  const borderColor = isDark ? '#333' : '#ccc';
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor }]}>
       {/* Todos List */}
       <FlatList
         data={todos}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.todoItem}>
-            <TouchableOpacity onPress={() => toggleCompleted(item)}>
-              <Text style={item.completed ? styles.completed : null}>{item.title}</Text>
+          <View
+            style={[
+              styles.todoItem,
+              { backgroundColor: inputBackground, borderColor },
+            ]}
+          >
+            <TouchableOpacity style={{ flex: 1 }} onPress={() => toggleCompleted(item)}>
+              <Text style={[styles.todoText, item.completed && styles.completed, { color: textColor }]}>
+                {item.title}
+              </Text>
             </TouchableOpacity>
+
             <View style={styles.buttons}>
-              <Button title="Edit" onPress={() => openEditModal(item)} />
-              <Button title="Delete" onPress={() => deleteTodo(item.id)} color="red" />
+              <TouchableOpacity
+                style={[styles.smallButton, styles.editButton]}
+                onPress={() => openEditModal(item)}
+              >
+                <Text style={styles.smallButtonText}>Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.smallButton, styles.deleteButton]}
+                onPress={() => deleteTodo(item.id)}
+              >
+                <Text style={styles.smallButtonText}>Delete</Text>
+              </TouchableOpacity>
             </View>
           </View>
         )}
         contentContainerStyle={{ paddingBottom: 100 }}
       />
 
-      {/* Add Todo button pinned at bottom */}
+      {/* Add Todo button */}
       <View style={styles.addButtonContainer}>
-        <Button title="Add Todo" onPress={() => setModalVisible(true)} />
+        <TouchableOpacity
+          style={[styles.addButton, styles.largeAddButton]}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={[styles.smallButtonText, styles.largeAddButtonText]}>Add Todo</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Add Modal */}
@@ -148,15 +173,23 @@ export default function TodoListScreen() {
           style={styles.modalContainer}
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.modal}>
+            <View style={[styles.modal, { backgroundColor: inputBackground }]}>
               <TextInput
                 placeholder="Todo title"
+                placeholderTextColor={isDark ? '#888' : '#aaa'}
                 value={newTitle}
                 onChangeText={setNewTitle}
-                style={styles.input}
+                style={[styles.input, { backgroundColor: inputBackground, borderColor, color: textColor }]}
+                multiline
               />
-              <Button title="Add" onPress={addTodo} />
-              <Button title="Cancel" onPress={() => setModalVisible(false)} />
+              <View style={[styles.modalButtons, { gap: 12 }]}>
+                <TouchableOpacity style={[styles.smallButton, styles.editButton]} onPress={addTodo}>
+                  <Text style={styles.smallButtonText}>Add</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.smallButton, styles.deleteButton]} onPress={() => setModalVisible(false)}>
+                  <Text style={styles.smallButtonText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
@@ -168,18 +201,26 @@ export default function TodoListScreen() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.modalContainer}
         >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.modal}>
+          <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+            <View style={[styles.modal, { backgroundColor: inputBackground }]}>
               <TextInput
                 placeholder="Edit todo"
+                placeholderTextColor={isDark ? '#888' : '#aaa'}
                 value={editTitle}
                 onChangeText={setEditTitle}
-                style={styles.input}
+                style={[styles.input, { backgroundColor: inputBackground, borderColor, color: textColor }]}
+                multiline
               />
-              <Button title="Save" onPress={editTodo} />
-              <Button title="Cancel" onPress={() => setEditModalVisible(false)} />
+              <View style={[styles.modalButtons, { gap: 12 }]}>
+                <TouchableOpacity style={[styles.smallButton, styles.editButton]} onPress={editTodo}>
+                  <Text style={styles.smallButtonText}>Save</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.smallButton, styles.deleteButton]} onPress={() => setEditModalVisible(false)}>
+                  <Text style={styles.smallButtonText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </TouchableWithoutFeedback>
+          </ScrollView>
         </KeyboardAvoidingView>
       </Modal>
     </View>
@@ -188,25 +229,21 @@ export default function TodoListScreen() {
 
 // Styles
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#f9f9f9' },
-  todoItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  buttons: { flexDirection: 'row', gap: 5 },
+  container: { flex: 1, paddingHorizontal: 20, paddingBottom: 20, paddingTop: 10 },
+  todoItem: { padding: 15, marginBottom: 10, borderRadius: 12, borderWidth: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  todoText: { fontSize: 16, flexShrink: 1 },
+  buttons: { flexDirection: 'row', gap: 8 },
+  smallButton: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  smallButtonText: { color: 'white', fontWeight: 'bold' },
+  editButton: { backgroundColor: '#4caf50' },
+  deleteButton: { backgroundColor: '#f44336' },
+  addButton: { backgroundColor: '#2196f3' },
   completed: { textDecorationLine: 'line-through', color: 'gray' },
-  addButtonContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
-  },
+  addButtonContainer: { position: 'absolute', bottom: 20, left: 20, right: 20 },
   modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  modal: { backgroundColor: 'white', padding: 20, borderRadius: 10, width: '90%' },
-  input: { borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 10, borderRadius: 5 },
+  modal: { padding: 20, borderRadius: 12, width: '90%' },
+  modalButtons: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 },
+  input: { borderWidth: 1, padding: 10, borderRadius: 8, marginBottom: 10, textAlignVertical: 'top' },
+  largeAddButton: { paddingVertical: 14, paddingHorizontal: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center', borderCurve: 'continuous' },
+  largeAddButtonText: { fontSize: 16, fontWeight: 'bold', color: 'white' },
 });
-
