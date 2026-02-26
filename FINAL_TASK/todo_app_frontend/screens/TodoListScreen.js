@@ -26,7 +26,7 @@ export default function TodoListScreen() {
   const [editTitle, setEditTitle] = useState('');
   const [editTodoId, setEditTodoId] = useState(null);
 
-  const API_URL = 'http://192.168.1.16:3000/todos'; //Use your local IP in order to connect to the backend from the mobile app
+  const API_URL = 'http://10.229.114.93:3000/todos'; //Use your local IP in order to connect to the backend from the mobile app
 
   const fetchTodos = async () => {
     try {
