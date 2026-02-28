@@ -1,0 +1,23 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  username: postgres   # <-- your PostgreSQL username
+  password: 1234      # <-- your PostgreSQL password
+  pool: 5
+  timeout: 5000
+
+development:
+  <<: *default
+  database: backend_development
+
+test:
+  <<: *default
+  database: backend_test
+
+production:
+  primary: &primary_production
+    <<: *default
+    database: backend_production
+    username: backend
+    password: <%= ENV["BACKEND_DATABASE_PASSWORD"] %>
